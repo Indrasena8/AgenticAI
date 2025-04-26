@@ -1,0 +1,29 @@
+[
+  {
+    "ID": "P001",
+    "Name": "Alex Morgan",
+    "Role": "Undergraduate",
+    "Skills": "Python, UI/UX",
+    "Availability": "Fri 1\u20136PM; Sat 9AM\u20135PM",
+    "Diet": "None",
+    "Pronouns": "she/her"
+  },
+  {
+    "ID": "P002",
+    "Name": "Jordan Lee",
+    "Role": "Graduate",
+    "Skills": "JavaScript, ML",
+    "Availability": "Sat 10AM\u20136PM; Sun 9AM\u20131PM",
+    "Diet": "Vegetarian",
+    "Pronouns": "they/them"
+  },
+  {
+    "ID": "P003",
+    "Name": "Chris Patel",
+    "Role": "PhD Student",
+    "Skills": "Data Science, LLMs",
+    "Availability": "All Weekend",
+    "Diet": "Vegan",
+    "Pronouns": "he/him"
+  }
+]
