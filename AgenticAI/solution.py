@@ -11,7 +11,7 @@ from csi_agents.logistics_agent import run_logistics_flow
 from csi_agents.postevent_agent import run_postevent_process
 from csi_agents.support import ask_support_agent
 from csi_agents.incident import mentor_drop_and_match
-# from csi_agents.judge import deploy_judging_form_and_server, declare_winners
+from agents.judge import run_app, declare_winners # 🆕 Import judging functions
 
 HACKATHON_FOLDER = "hackathons"
 
@@ -78,7 +78,7 @@ def automate_hackathon_management():
         judge_choice = input("Enter 1 or 2: ").strip()
 
         if judge_choice == "1":
-            deploy_judging_form_and_server()
+            run_app()  # ✅ Launch Flask server
         elif judge_choice == "2":
             declare_winners()
         else:
