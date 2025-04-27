@@ -3,6 +3,10 @@ import requests
 import urllib.request
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
+import smtplib
+from email.mime.text import MIMEText
+import json
+import re
 
 # Connect to Azure AI Project
 project_client = AIProjectClient.from_connection_string(
@@ -48,12 +52,14 @@ def parse_sections(content):
     sections = {}
     current_section = None
     for line in content.splitlines():
-        if line.strip().lower().startswith("section"):
+        # Better matching: check if line startswith ### Section
+        if line.strip().lower().startswith("### section"):
             current_section = line.strip()
             sections[current_section] = ""
         elif current_section:
             sections[current_section] += line + "\n"
     return sections
+
 
 # Function to save sections into files
 def save_sections(sections):
@@ -70,10 +76,40 @@ def save_sections(sections):
 
     for section_name, file_name in mapping.items():
         for key in sections:
-            if section_name.lower() in key.lower():
+            if section_name in key.lower():
                 with open(f"generated_content/{file_name}", "w", encoding="utf-8") as f:
                     f.write(sections[key].strip())
                 print(f"✅ Saved {file_name}")
+                
+def format_markdown_to_html(text):
+    html = text
+    
+    # Replace **bold**
+    html = html.replace("**", "<b>").replace("</b><b>", "")  # fix double bolds
+
+    # Replace bullet points (- something) with <ul><li>something</li></ul>
+    lines = html.splitlines()
+    html_lines = []
+    in_list = False
+    for line in lines:
+        stripped = line.strip()
+        if stripped.startswith("- "):
+            if not in_list:
+                html_lines.append("<ul>")
+                in_list = True
+            item = stripped[2:].strip()
+            html_lines.append(f"<li>{item}</li>")
+        else:
+            if in_list:
+                html_lines.append("</ul>")
+                in_list = False
+            html_lines.append(line + "<br>")  # Add line break manually
+    
+    if in_list:
+        html_lines.append("</ul>")
+
+    final_html = "\n".join(html_lines)
+    return f"<html><body>{final_html}</body></html>"
 
 # Function to generate poster images
 def generate_poster_images(poster_prompt_text):
@@ -104,6 +140,55 @@ def generate_poster_images(poster_prompt_text):
     else:
         print(f"❌ Poster generation failed: {response.status_code}")
         print(response.text)
+        
+        
+def parse_participant_emails(section7_text):
+    participants = []
+    for line in section7_text.strip().splitlines():
+        line = line.strip()
+        if line.startswith("-"):
+            parts = line.lstrip("-").strip().split(",", 1)
+            if len(parts) == 2:
+                name = parts[0].strip()
+                email = parts[1].strip()
+
+                # 🛡️ Fix: Remove any garbage after the email (like spaces, 【, etc.)
+                email = re.split(r'\s|【', email)[0].strip()
+
+                participants.append({"Name": name, "Email": email})
+    return participants
+
+
+def send_emails_to_participants_from_list(email_subject, email_template, participants):
+    smtp_server = "smtp.gmail.com"
+    smtp_port = 587
+    sender_email = "kindrasena8@gmail.com"  # your real email
+    sender_password = "sdecbbhtntaqoysp"     # app password (never share real password)
+
+    server = smtplib.SMTP(smtp_server, smtp_port)
+    server.starttls()
+    server.login(sender_email, sender_password)
+
+    for participant in participants:
+        recipient_email = participant["Email"]
+        recipient_name = participant["Name"].split()[0]  # Use first name only
+
+        personalized_email = (email_template
+                      .replace("[Student's First Name]", recipient_name)
+                      .replace("[Student Name]", recipient_name)
+                      .replace("[Name]", recipient_name)
+                      .replace("[Your Name]", "Hackathon Team"))
+
+        formatted_html = format_markdown_to_html(personalized_email)
+        msg = MIMEText(formatted_html, "html")
+        msg["Subject"] = email_subject
+        msg["From"] = sender_email
+        msg["To"] = recipient_email
+
+        server.sendmail(sender_email, recipient_email, msg.as_string())
+        print(f"✅ Email sent to {recipient_name} ({recipient_email})")
+
+    server.quit()
 # Main Runner
 if __name__ == "__main__":
     print("\n📢 Please Enter Hackathon/Event Details:\n")
@@ -180,6 +265,58 @@ Make it exciting, futuristic, and student-focused.
     print(poster_prompt)
 
     generate_poster_images(poster_prompt)
+    
+    student_email_section = ""
+    for key in sections:
+        if "section 2" in key.lower() and "email" in key.lower():
+            student_email_section = sections[key]
+            break
 
 
+    # Extract only Student Email Template
+    # 🧠 Step 5: Extract Student Email Template ONLY
+    student_email_text = ""
+    inside_student_email = False
 
+    for line in student_email_section.splitlines():
+        if "**Student Email Template" in line:
+            inside_student_email = True
+            continue
+        if inside_student_email:
+            if "**Faculty Email Template" in line or "**Sponsor Email Template" in line or line.strip() == "---":
+                break
+            student_email_text += line + "\n"
+            
+
+    if student_email_text:
+        # Extract Subject and Body
+        lines = student_email_text.strip().split("\n")
+        subject_line = ""
+        body_lines = []
+
+        for l in lines:
+            if "subject" in l.lower():
+                parts = l.split(":", 1)
+                if len(parts) > 1:
+                    subject_line = parts[1].strip()
+            else:
+                body_lines.append(l)
+
+        email_subject = subject_line
+        email_body = "\n".join(body_lines).strip()
+
+        # 🧠 Step 6: Parse Participants from Section 7
+        participant_emails_text = ""
+        for key in sections:
+            if "section 7" in key.lower() and "participant" in key.lower():
+                participant_emails_text = sections[key]
+                break
+
+        participants = parse_participant_emails(participant_emails_text)
+
+        # 🧠 Step 7: Send Emails
+        print("\n📬 Sending emails to participants...\n")
+        send_emails_to_participants_from_list(email_subject, email_body, participants)
+
+    else:
+        print("⚠️ No Student Email Template found. Skipping email sending.")
