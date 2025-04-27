@@ -1,0 +1,5 @@
+Problem Statement: Adaptive Learning Platform for Personalized Education
+
+Description: Design an adaptive e-learning platform powered by AI that dynamically adjusts content delivery and difficulty based on the student’s learning pace and comprehension. The system should integrate multi-modal engagement methods like video, AR/VR, and interactive quizzes.
+
+Relevant Research Areas: Educational Technology, Artificial Intelligence, Human-Computer Interaction

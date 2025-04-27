@@ -1,0 +1,28 @@
+Mentor Name: Sammie
+Time : Saturday 9:30 AM
+Event : Azure AI Hackathon
+Event Venue : CSI Building
+Type : Room Conflict
+Message: Room GML E190 was double-booked. Teams relocated to E120.
+-----------------------------------------------------
+Mentor Name: Casey
+Time : Saturday 1 PM
+Event : Generative AI Hackathon
+Event Venue : CSI Building
+Type: Mentor No-show
+Message: Scheduled mentor did not arrive. Reassigned backup mentor.
+-----------------------------------------------------
+Mentor Name: Bhakthan
+Time : Sunday 2 PM
+Event : Python AI Hackathon
+Event Venue : Lubar college of business
+Type : Showing on Time
+Message: Scheduled mentor is on time
+----------------------------------------------------
+Mentor Name: Santosh
+Time : Sunday 4PM
+Event : Development Hackathon
+Event Venue : UWM university
+Type: Tech Issue
+Message: Wi-Fi briefly down. Restored in 10 minutes
+----------------------------------------------------

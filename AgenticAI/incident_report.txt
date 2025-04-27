@@ -1,0 +1,4 @@
+List all incidents from incident_alerts.json with numbering.
+Ask me to select incidents to notify participants about.
+After selection, generate clean final incident summary.
+Return only the final incident summary without explanations.
