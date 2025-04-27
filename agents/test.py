@@ -1,10 +1,9 @@
 import os
 import json
 import re
-from agents.problem_statement import generate_problem_statements_from_agent, read_problem_from_file
-from agents.sponsors import find_sponsors_for_problem, find_sponsors_and_send_emails
-from agents.marketingagent import generate_marketing_content, parse_sections
-
+from csi_agents.problem_statement import generate_problem_statements_from_agent, read_problem_from_file
+from csi_agents.sponsors import find_sponsors_for_problem, find_sponsors_and_send_emails
+from csi_agents.marketing_agent import generate_marketing_content, parse_sections
 
 # Folder to store all events
 HACKATHON_FOLDER = "hackathons"

@@ -5,6 +5,7 @@
     "Role": "Undergraduate",
     "Skills": "Python, UI/UX",
     "Availability": "Fri 1\u20136PM; Sat 9AM\u20135PM",
+    "Email":"amoghamanju@gmail.com",
     "Diet": "None",
     "Pronouns": "she/her"
   },
@@ -14,6 +15,7 @@
     "Role": "Graduate",
     "Skills": "JavaScript, ML",
     "Availability": "Sat 10AM\u20136PM; Sun 9AM\u20131PM",
+    "Email":"kuruvadi@uwm.edu",
     "Diet": "Vegetarian",
     "Pronouns": "they/them"
   },
@@ -23,6 +25,7 @@
     "Role": "PhD Student",
     "Skills": "Data Science, LLMs",
     "Availability": "All Weekend",
+    "Email":"kindrasena8@gmail.com",
     "Diet": "Vegan",
     "Pronouns": "he/him"
   }
