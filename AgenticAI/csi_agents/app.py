@@ -38,16 +38,5 @@ def judge_form():
 
     return render_template('judge_form.html', rubric_criteria=rubric_criteria)
 
-@app.route('/declare-winners', methods=['POST'])
-def trigger_declare_winners():
-    try:
-        backend_url = "http://localhost:8000/declare-winners"  # judge.py server
-        response = requests.post(backend_url)
-        if response.status_code == 200:
-            return "🏆 Winners Declared Successfully!"
-        else:
-            return "❌ Failed to declare winners."
-    except Exception as e:
-        return f"❌ Error: {str(e)}"
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
