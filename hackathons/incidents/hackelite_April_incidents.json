@@ -1,0 +1,12 @@
+[
+    {
+        "Time": "TBD",
+        "Type": "Mentor Drop + Suggestions",
+        "Message": "Mentor dropped. Recommendations provided:\n### Recommended Mentor Replacements:\n\n1. **Name:** Prof. Emma Lee  \n   **Skills:** AI, Mental Health, Predictive Analytics  \n   **Confidence Level:** 90%  \n   **Match Percentage:** 95% (High relevance to AI and adaptive learning aspects)  \n\n2. **Name:** Dr. Mark Smith  \n   **Skills:** Public Health, Epidemiology, Cloud Computing  \n   **Confidence Level:** 92%  \n   **Match Percentage:** 80% (Some relevance through cloud computing for real-time analytics)  \n\n3. **Name:** Ms. Laura Kim  \n   **Skills:** Biomedical Engineering, IoT, Healthcare Devices  \n   **Confidence Level:** 88%  \n   **Match Percentage:** 70% (Limited relevance, but possible IoT applications in EdTech)  \n\nProf. Emma Lee is the most suitable mentor for this theme considering her expertise in AI and analytics."
+    },
+    {
+        "Time": "TBD",
+        "Type": "Mentor Drop + Suggestions",
+        "Message": "Mentor dropped. Recommendations provided:\n**Recommended Mentor Replacements:**\n\n1. **Name:** Prof. Emma Lee  \n   - **Skills:** AI, Mental Health, Predictive Analytics  \n   - **Confidence Level:** 90%  \n   - **Match Percentage:** 90% (Strong skills in AI, relevant to the problem theme).\n\n2. **Name:** Dr. Mark Smith  \n   - **Skills:** Public Health, Epidemiology, Cloud Computing  \n   - **Confidence Level:** 92%  \n   - **Match Percentage:** 50% (Relevant experience intersects in computational/technical areas).\n\n3. **Name:** Ms. Laura Kim  \n   - **Skills:** Biomedical Engineering, IoT, Healthcare Devices  \n   - **Confidence Level:** 88%  \n   - **Match Percentage:** 40% (Slight alignment via IoT, minimal relevance to AI and education)."
+    }
+]

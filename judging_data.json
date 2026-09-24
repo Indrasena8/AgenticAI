@@ -1,0 +1,70 @@
+{
+    "judges": [
+        {
+            "judge_name": "indu",
+            "participant_name": "indrasena",
+            "scores": {
+                "Innovation": 10.0,
+                "Technical Complexity": 10.0,
+                "User Experience": 10.0,
+                "Impact": 10.0
+            },
+            "average_score": 10.0
+        },
+        {
+            "judge_name": "Gokul",
+            "participant_name": "Indrasena",
+            "scores": {
+                "Innovation": 8.0,
+                "Technical Complexity": 8.0,
+                "User Experience": 8.0,
+                "Impact": 8.0
+            },
+            "average_score": 8.0
+        },
+        {
+            "judge_name": "Indu",
+            "participant_name": "Amogha",
+            "scores": {
+                "Innovation": 10.0,
+                "Technical Complexity": 10.0,
+                "User Experience": 10.0,
+                "Impact": 10.0
+            },
+            "average_score": 10.0
+        },
+        {
+            "judge_name": "Indu",
+            "participant_name": "Saad",
+            "scores": {
+                "Innovation": 10.0,
+                "Technical Complexity": 7.0,
+                "User Experience": 6.0,
+                "Impact": 8.0
+            },
+            "average_score": 7.75
+        },
+        {
+            "judge_name": "Indu",
+            "participant_name": "Para",
+            "scores": {
+                "Innovation": 10.0,
+                "Technical Complexity": 9.0,
+                "User Experience": 8.0,
+                "Impact": 7.0
+            },
+            "average_score": 8.5
+        },
+        {
+            "judge_name": "Casey",
+            "participant_name": "Indrasena",
+            "scores": {
+                "Innovation": 8.0,
+                "Technical Complexity": 10.0,
+                "User Experience": 9.0,
+                "Impact": 7.0
+            },
+            "average_score": 8.5
+        }
+    ]
+}

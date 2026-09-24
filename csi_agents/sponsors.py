@@ -1,3 +1,5 @@
+# sponsor.py
+
 from azure.ai.projects import AIProjectClient
 from azure.identity import DefaultAzureCredential
 import smtplib
@@ -28,7 +30,7 @@ def find_sponsors_for_problem(problem_text):
 
     messages = project_client.agents.list_messages(thread_id=thread.id)
 
-    return messages.text_messages[0].text["value"]  # ✅ Correct
+    return messages.text_messages[0].text["value"]
 
 def send_email(to_email, subject, body, from_email, from_password):
     msg = MIMEMultipart()
@@ -41,20 +43,12 @@ def send_email(to_email, subject, body, from_email, from_password):
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(from_email, from_password)
-    text = msg.as_string()
-    server.sendmail(from_email, to_email, text)
+    server.sendmail(from_email, to_email, msg.as_string())
     server.quit()
-
 
 def find_sponsors_and_send_emails(problem_text, from_email, from_password, event_date):
     sponsor_emails_text = find_sponsors_for_problem(problem_text)
 
-    print("\n🛠 RAW OUTPUT FROM SPONSOR AGENT:")
-    print("-" * 60)
-    print(sponsor_emails_text)
-    print("-" * 60)
-
-    # Extract valid emails using regex
     email_matches = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", sponsor_emails_text)
 
     if not email_matches:
@@ -68,18 +62,20 @@ def find_sponsors_and_send_emails(problem_text, from_email, from_password, event
         subject_line = f"Sponsorship Invitation – Hackathon on {problem_title}"
 
         body_text = f"""
-Hi, this is Indrasena from the Connected Systems Institute (CSI) at the University of Wisconsin–Milwaukee. We are organizing a hackathon focused on "{problem_title}" scheduled for {event_date}.
+Hi,
 
-As a leader in your field, we believe your organization would be an excellent partner for this event. Your expertise aligns perfectly with the theme and goals of this hackathon.
+This is the CSI Hackathon Team from the Connected Systems Institute (CSI) at the University of Wisconsin–Milwaukee. We are organizing a hackathon focused on "{problem_title}" scheduled for {event_date}.
+
+We believe your organization would be an excellent partner for this event. Your expertise aligns perfectly with the theme and goals of this hackathon.
 
 We would love to explore a potential sponsorship or collaboration with your team. Please let us know if you'd be open to a short conversation or receiving additional details.
 
 Thank you for your time and consideration.
 
 Best regards,  
-Indrasena Kalyanam  
-Graduate Student | CSI, UWM  
-Email: kindrasena8@gmail.com
+CSI Hackathon Team  
+Connected Systems Institute (CSI), UWM  
+indrasenakalyanam@gmail.com
 """.strip()
 
         try:

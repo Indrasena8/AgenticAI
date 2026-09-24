@@ -1,11 +1,18 @@
+# solution.py
+
 import os
 import json
 import re
-from agents.problem_statement import generate_problem_statements_from_agent, read_problem_from_file
-from agents.sponsors import find_sponsors_for_problem, find_sponsors_and_send_emails
-from agents.marketingagent import generate_marketing_content, parse_sections, save_sections, generate_poster_images, parse_participant_emails, send_emails_to_participants_from_list
 
-# Folder to store all events
+from csi_agents.problem_statement import generate_problem_statements_from_agent, read_problem_from_file
+from csi_agents.sponsors import find_sponsors_for_problem, find_sponsors_and_send_emails
+from csi_agents.marketingagent import generate_marketing_content, parse_sections, save_sections, generate_poster_images, parse_participant_emails, send_emails_to_participants_from_list
+from csi_agents.logistics_agent import run_logistics_flow
+from csi_agents.postevent_agent import run_postevent_process
+from csi_agents.support import ask_support_agent
+from csi_agents.incident import mentor_drop_and_match
+from csi_agents.judge import run_app, declare_winners
+
 HACKATHON_FOLDER = "hackathons"
 
 def save_hackathon(event_id, data):
@@ -16,13 +23,75 @@ def save_hackathon(event_id, data):
     print(f"\n💾 Hackathon data saved to {file_path}")
 
 def automate_hackathon_management():
-    print("\n🚀 Hackathon Setup Automation Started\n")
+    print("Choose an option:")
+    print("1 - Complete Hackathon Setup (Problem → Sponsors → Marketing → Logistics)")
+    print("2 - Post-event Management (Thank You Emails + Report)")
+    print("3 - Support Chat (Ask any question)")
+    print("4 - Incident Alerts Management")
+    print("5 - Judging and Winner Declaration")
 
-    # STEP 1: Problem Selection
-    print("📋 Step 1: Select or Generate Problem Statement\n")
+    option = input("Enter 1, 2, 3, 4, or 5: ").strip()
+
+    from_email = "kindrasena8@gmail.com"
+    from_password = "sdecbbhtntaqoysp"
+
+    if option == "1":
+        complete_hackathon_flow(from_email, from_password)
+
+    elif option == "2":
+        print("\nPost-Event Management")
+        print("----------------------")
+
+        photos_link = input("Enter link to event photos: ").strip()
+
+        student_emails_input = input("Enter student emails (comma separated): ").strip()
+        mentor_emails_input = input("Enter mentor emails (comma separated): ").strip()
+
+        student_emails = [email.strip() for email in student_emails_input.split(",") if email.strip()]
+        mentor_emails = [email.strip() for email in mentor_emails_input.split(",") if email.strip()]
+
+        run_postevent_process(
+            student_emails=student_emails,
+            mentor_emails=mentor_emails,
+            from_email=from_email,
+            from_password=from_password,
+            photos_link=photos_link
+        )
+
+    elif option == "3":
+        print("\nSupport Chat Management")
+        print("------------------------")
+        ask_support_agent()
+
+    elif option == "4":
+        print("\nIncident Alerts Management")
+        print("---------------------------")
+        event_id = input("Enter Event ID (example: mental_health_april): ").strip()
+        mentor_drop_and_match(event_id)
+
+    elif option == "5":
+        print("\nJudging and Winner Declaration")
+        print("-------------------------------")
+        print("1 - Deploy Judging Form")
+        print("2 - Declare Winners")
+
+        judge_choice = input("Enter 1 or 2: ").strip()
+
+        if judge_choice == "1":
+            run_app()
+        elif judge_choice == "2":
+            declare_winners()
+        else:
+            print("❌ Invalid selection for judging management.")
+    else:
+        print("Invalid choice. Exiting.")
+
+def complete_hackathon_flow(from_email, from_password):
+    print("\n🚀 Complete Hackathon Setup Started\n")
+
+    # STEP 1: Problem Statement
+    print("\n📋 Step 1: Select or Generate Problem Statement\n")
     choice = input("1 - Read from file\n2 - Generate new problems\nChoose (1 or 2): ").strip()
-
-    problem_text = ""
 
     if choice == "1":
         file_path = input("Enter the file path to your problem statement: ").strip()
@@ -30,7 +99,6 @@ def automate_hackathon_management():
     elif choice == "2":
         domain = input("Enter a specific domain (optional, press Enter to skip): ").strip()
         problems_text = generate_problem_statements_from_agent(domain)
-
         problems = problems_text.split('---')
         problems = [p.strip() for p in problems if p.strip()]
 
@@ -51,23 +119,20 @@ def automate_hackathon_management():
     print("\n✅ Problem Statement Selected Successfully.\n")
 
     # STEP 2: Find Sponsors
-    print("🏢 Step 2: Finding Potential Sponsors...\n")
+    print("\n🏢 Step 2: Finding Potential Sponsors...\n")
     sponsor_emails_text = find_sponsors_for_problem(problem_text)
     sponsor_emails = re.findall(r"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}", sponsor_emails_text)
 
-    if not sponsor_emails:
-        print("⚠️ Warning: No sponsors found!")
-    else:
+    if sponsor_emails:
         print(f"✅ Found {len(sponsor_emails)} potential sponsors.")
+        send_now = input("\nDo you want to send sponsorship emails now? (yes/no): ").strip().lower()
 
-    send_now = input("\nDo you want to send sponsorship emails now? (yes/no): ").strip().lower()
-    if send_now == "yes":
-        from_email = input("\nEnter your sending email (example@gmail.com): ").strip()
-        from_password = input("Enter your email password or App Password: ").strip()
-        event_date_placeholder = "TBD"  # Event date not confirmed yet
-        find_sponsors_and_send_emails(problem_text, from_email, from_password, event_date_placeholder)
+        if send_now == "yes":
+            find_sponsors_and_send_emails(problem_text, from_email, from_password, event_date="TBD")
+        else:
+            print("📨 Skipped sending sponsor emails for now.")
     else:
-        print("📨 Skipped sending sponsor emails for now.")
+        print("⚠️ Warning: No sponsors found.")
 
     # STEP 3: Confirm Event Details
     print("\n🎯 Step 3: Confirm Event Details\n")
@@ -76,54 +141,32 @@ def automate_hackathon_management():
     event_location = input("Enter Event Location (e.g., CSI Building, UWM): ").strip()
     event_id = event_name.lower().replace(" ", "_") + "_" + event_dates.split()[0]
 
-    # STEP 4: Generate Marketing Content
-    print("\n🎨 Step 4: Generate Marketing Materials\n")
+    # STEP 4: Marketing
+    print("\n🎨 Step 4: Generate Marketing Content\n")
     audience = input("Enter Target Audience (e.g., Students, Faculty, Sponsors): ").strip()
     highlights = input("Enter Key Highlights (e.g., Prizes, Workshops, Networking): ").strip()
     tone_style = input("Enter Tone and Style (e.g., Energetic for Students, Professional for Sponsors): ").strip()
 
-    full_marketing_content = generate_marketing_content(
-        event_name, event_dates, event_location, audience, highlights, tone_style
-    )
+    full_marketing_content = generate_marketing_content(event_name, event_dates, event_location, audience, highlights, tone_style)
     sections = parse_sections(full_marketing_content)
 
-    # Save individual files
+
     save_sections(sections)
 
-    # Generate Poster
-    poster_section_key = None
+
+    # Poster Generation
+    poster_prompt = None
     for key in sections:
         if "poster description" in key.lower():
-            poster_section_key = key
+            poster_prompt = sections[key].strip()
             break
 
-    if poster_section_key:
-        raw_poster_text = sections[poster_section_key].strip()
-        event_match = re.search(r'\*\*Event\*\*:\s*(.*)', raw_poster_text)
-        dates_match = re.search(r'\*\*Dates\*\*:\s*(.*)', raw_poster_text)
-        location_match = re.search(r'\*\*Location\*\*:\s*(.*)', raw_poster_text)
-        tagline_match = re.search(r'\*\*Tagline\*\*:\s*(.*)', raw_poster_text)
-
-        event_name_extracted = event_match.group(1).strip() if event_match else event_name
-        event_dates_extracted = dates_match.group(1).strip() if dates_match else event_dates
-        event_location_extracted = location_match.group(1).strip() if location_match else event_location
-        tagline_extracted = tagline_match.group(1).strip() if tagline_match else "Join Us!"
-
-        poster_prompt = f"""
-Create a vibrant event poster for "{event_name_extracted}".
-The event is happening at "{event_location_extracted}" on {event_dates_extracted}.
-Theme: {tagline_extracted}.
-Include visuals of students coding, workshops, prizes, networking.
-Use bright and inspiring colors.
-Focus on energy, innovation, and technology.
-"""
-        print("\n🎯 Generating Poster Image...\n")
+    if poster_prompt:
         generate_poster_images(poster_prompt)
-
     else:
-        print("⚠️ No poster description section found. Skipping poster image generation.")
+        print("⚠️ No poster prompt found. Skipping poster generation.")
 
-    # STEP 5: Optionally send participant emails
+        # 🧠 After saving sections, attempt to send marketing emails
     participant_email_section = None
     for key in sections:
         if "section 7" in key.lower() and "participant" in key.lower():
@@ -147,7 +190,7 @@ Focus on energy, innovation, and technology.
                     inside_student_email = True
                     continue
                 if inside_student_email:
-                    if "**Faculty Email Template" in line or "**Sponsor Email Template" in line or line.strip() == "---":
+                    if "*Faculty Email Template" in line or "*Sponsor Email Template" in line or line.strip() == "---":
                         break
                     student_email_text += line + "\n"
 
@@ -171,6 +214,10 @@ Focus on energy, innovation, and technology.
     else:
         print("\n⚠️ No participants found in Section 7. Skipping email sending.")
 
+    # STEP 5: Logistics Management
+    print("\n🚚 Step 5: Logistics Coordination\n")
+    logistics_summary = run_logistics_flow(event_dates)
+
     # Final Save
     hackathon_data = {
         "event_id": event_id,
@@ -187,14 +234,13 @@ Focus on energy, innovation, and technology.
             "audience_segmentation": sections.get("### Section 5: Audience Segmentation", ""),
             "posting_calendar": sections.get("### Section 6: Posting Calendar", "")
         },
-        "logistics_summary": None,
+        "logistics_summary": logistics_summary,
         "catering_email_sent": False
     }
 
     save_hackathon(event_id, hackathon_data)
 
     print("\n✅ Hackathon Setup Successfully Completed!")
-    print("You can now proceed to logistics, registration, and other flows later.\n")
 
 if __name__ == "__main__":
     automate_hackathon_management()

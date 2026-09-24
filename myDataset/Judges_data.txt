@@ -1,0 +1,22 @@
+Judge Name: Sammie
+Time : Saturday 10:30 AM
+Event : Azure AI Hackathon
+Event Venue : CSI Building
+Type : Getting delayed for 10min
+Message: Sheduled mentor delayed for 10min
+-----------------------------------------------------
+JudgeName: Casey
+Time : Saturday 1:30 PM
+Event : Generative AI Hackathon
+Event Venue : CSI Building
+Type: Mentor No-show
+Message: Scheduled mentor did not arrive. Reassigned backup mentor.
+
+----------------------------------------------------
+Judge Name: Santosh
+Time : Sunday 4: 30 PM
+Event : Development Hackathon
+Event Venue : UWM university
+Type: Tech Issue in 
+Message: Wi-Fi briefly down. Restored in 10 minutes
+----------------------------------------------------

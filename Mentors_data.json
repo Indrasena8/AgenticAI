@@ -1,0 +1,37 @@
+[
+  {
+      "Name": "Dr. Alex Johnson",
+      "Skills": ["Telemedicine", "Healthcare", "IoT"],
+      "Location": "Milwaukee",
+      "Confidence": 95,
+      "Available": true
+  },
+  {
+      "Name": "Prof. Emma Lee",
+      "Skills": ["AI", "Mental Health", "Predictive Analytics"],
+      "Location": "Remote",
+      "Confidence": 90,
+      "Available": true
+  },
+  {
+      "Name": "Mr. Sam Patel",
+      "Skills": ["Healthcare Management", "Wearables", "Data Science"],
+      "Location": "Milwaukee",
+      "Confidence": 85,
+      "Available": false
+  },
+  {
+      "Name": "Ms. Laura Kim",
+      "Skills": ["Biomedical Engineering", "IoT", "Healthcare Devices"],
+      "Location": "Remote",
+      "Confidence": 88,
+      "Available": true
+  },
+  {
+      "Name": "Dr. Mark Smith",
+      "Skills": ["Public Health", "Epidemiology", "Cloud Computing"],
+      "Location": "Milwaukee",
+      "Confidence": 92,
+      "Available": true
+  }
+]
