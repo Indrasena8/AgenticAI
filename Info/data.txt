@@ -17,6 +17,6 @@ az functionapp create --resource-group AZ-CSI-Grp1 \
 
 export PROJECT_CONNECTION_STRING="https://havoc4292589905.openai.azure.com/"
 export SENDER_EMAIL="kindrasena8@gmail.com"
-export APP_PASSWORD="sdecbbhtntaqoysp"
+export APP_PASSWORD=""
 
 func azure functionapp publish SendMailSponsors
